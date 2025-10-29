@@ -47,19 +47,25 @@ project_root/
 
 ## ⚙️ Configuration
 
-Set your environment variables inside `src/configs/config.py` or a `.env` file:
+### Environment Variables Setup
 
-```python
-CLICKHOUSE_HOST = "localhost"
-CLICKHOUSE_USER = "analytics"
-CLICKHOUSE_PASSWORD = "password123"
-CLICKHOUSE_DB = "analytics_db"
+Create a `.env` file in the project root (this file should be added to `.gitignore`):
 
-DATA_DIR = "data"
-DATA_DIR_ZIPPED = "data_zipped"
-LOGS_DIR = "logs"
-PROCESSED_LOG = "processed_log.json"
-PROCESSED_LOG_ZIPPED = "processed_log_zipped.json"
+```bash
+# ClickHouse Connection Settings
+CLICKHOUSE_HOST=localhost
+CLICKHOUSE_USER=analytics
+CLICKHOUSE_PASSWORD=your_secure_password_here
+CLICKHOUSE_DB=amazon_reviews_db
+
+# Directory Configuration
+DATA_DIR=data
+DATA_DIR_ZIPPED=data_zipped
+LOGS_DIR=logs
+
+# Process Tracking Files
+PROCESSED_LOG=processed_log.json
+PROCESSED_LOG_ZIPPED=processed_log_zipped.json
 ```
 
 ---
