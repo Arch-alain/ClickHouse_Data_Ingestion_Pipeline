@@ -1,0 +1,31 @@
+2025-10-28 23:11:10,993 - INFO - === Data Ingestion Process Started ===
+2025-10-28 23:11:10,995 - INFO - === Data Ingestion Process Finished ===
+2025-10-28 23:24:25,536 - INFO - === Data Ingestion Process Started ===
+2025-10-28 23:24:25,537 - INFO - === Processing unzipped files ===
+2025-10-28 23:24:25,539 - INFO - No new files to process.
+2025-10-28 23:24:25,539 - INFO - === Data Ingestion Process Finished ===
+2025-10-28 23:27:38,948 - INFO - === Data Ingestion Process Started ===
+2025-10-28 23:27:38,949 - INFO - Downloading file from URL: https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/All_Beauty.jsonl.gz
+2025-10-28 23:27:38,949 - INFO - Downloading dataset from https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/All_Beauty.jsonl.gz
+2025-10-28 23:27:58,954 - INFO - File downloaded: data/raw_zipped/All_Beauty.jsonl.gz
+2025-10-28 23:27:58,960 - INFO - Downloaded file: data/raw_zipped/All_Beauty.jsonl.gz
+2025-10-28 23:27:58,961 - INFO - === Data Ingestion Process Finished ===
+2025-10-28 23:31:42,343 - INFO - === Data Ingestion Process Started ===
+2025-10-28 23:31:42,344 - INFO - === Unzipping new files ===
+2025-10-28 23:31:43,731 - INFO - Extracted: ['data/raw_unzipped/All_Beauty.jsonl']
+2025-10-28 23:31:43,735 - INFO - Unzipped data/raw_zipped/All_Beauty.jsonl.gz → ['data/raw_unzipped/All_Beauty.jsonl']
+2025-10-28 23:31:43,735 - ERROR - ❌ Data ingestion failed: [Errno 2] No such file or directory: 'data/processed/processed_zipped_log.json'
+Traceback (most recent call last):
+  File "/Users/alaindestinkarasira/Documents/ClickHouse_Data_Ingestion_Pipeline/src/ingestion/data_ingestor.py", line 118, in main
+    unzipping_mode()
+  File "/Users/alaindestinkarasira/Documents/ClickHouse_Data_Ingestion_Pipeline/src/ingestion/data_ingestor.py", line 61, in unzipping_mode
+    save_processed_files(processed_hashes, PROCESSED_LOG_ZIPPED)
+  File "/Users/alaindestinkarasira/Documents/ClickHouse_Data_Ingestion_Pipeline/src/utils/ingestion_utils.py", line 32, in save_processed_files
+    with open(processed_log, "w") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/processed/processed_zipped_log.json'
+2025-10-28 23:35:28,639 - INFO - === Data Ingestion Process Started ===
+2025-10-28 23:35:28,639 - INFO - === Unzipping new files ===
+2025-10-28 23:35:29,930 - INFO - Extracted: ['data/raw_unzipped/All_Beauty.jsonl']
+2025-10-28 23:35:29,930 - INFO - Unzipped data/raw_zipped/All_Beauty.jsonl.gz → ['data/raw_unzipped/All_Beauty.jsonl']
+2025-10-28 23:35:29,979 - INFO - === Data Ingestion Process Finished ===
