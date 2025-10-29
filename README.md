@@ -95,20 +95,17 @@ Orchestrates the entire ingestion flow:
 Run the script from the project root:
 
 ```bash
-python -m src.ingestion.data_ingestor --url "https://example.com/data.json.gz" --unzipping --process
+python -m src.ingestion.data_ingestor --url "https://example.com/data.json.gz"
 ```
 
 ### Available Options
 
-| Argument | Description |
-|----------|-------------|
 | `--url` | URL of the dataset to download |
+
 | `--unzipping` | Unzips any new compressed files |
+
 | `--process` | Processes unzipped files and loads them into ClickHouse |
 
-You can combine them (as shown above) or run each step separately.
-
----
 
 ## 🗃️ Example Workflow
 
