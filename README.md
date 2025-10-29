@@ -1,8 +1,9 @@
 # 🧩 Data Ingestion Pipeline for ClickHouse
 
-This project automates the process of downloading, extracting, processing, and loading large-scale JSON/JSONL datasets into a ClickHouse database.
+This project automates the process of downloading, extracting, processing, and loading large-scale Amazon product review datasets (JSON/JSONL format) into a ClickHouse database.
 
-It is designed as a modular and reusable pipeline for data engineers who want to manage ingestion workflows efficiently while preventing duplicate processing.
+It is designed as a modular and reusable pipeline to enable efficienncy in managing Amazon review data ingestion workflows while preventing duplicate processing.
+
 
 ---
 
