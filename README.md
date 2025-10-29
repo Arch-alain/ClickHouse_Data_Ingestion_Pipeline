@@ -1,102 +1,161 @@
- # 🧩 Data Ingestion Pipeline for ClickHouse
+# 🧩 Data Ingestion Pipeline for ClickHouse
 
-This project automates the process of **downloading, extracting, processing, and loading large-scale JSON/JSONL datasets** into a **ClickHouse** database.
+This project automates the process of downloading, extracting, processing, and loading large-scale JSON/JSONL datasets into a ClickHouse database.
 
-It is designed as a **modular and reusable pipeline** for data engineers who want to manage ingestion workflows efficiently while preventing duplicate processing.
+It is designed as a modular and reusable pipeline for data engineers who want to manage ingestion workflows efficiently while preventing duplicate processing.
 
 ---
 
 ## 🚀 Overview
 
-The pipeline is built to handle the entire lifecycle of ingesting large, compressed datasets. It performs the following key tasks:
+The pipeline performs the following tasks:
 
-* **Download** compressed files from a given URL.
-* **Decompress** `.gz` or `.zip` files automatically into a staging area.
-* **Track processed files** using hash-based logs to **avoid re-ingestion** (deduplication).
-* **Process and clean** JSON/JSONL data into **Pandas DataFrames**.
-* **Insert cleaned data into ClickHouse in batches** for efficient, high-performance ingestion.
+- **Download** compressed files from a given URL
+- **Decompress** `.gz` or `.zip` files automatically
+- **Track** processed files to avoid re-ingestion
+- **Process** and clean JSON/JSONL data into Pandas DataFrames
+- **Insert** cleaned data into ClickHouse in batches for efficient ingestion
 
 ---
 
 ## 🏗️ Project Structure
 
-The project uses a clear, modular structure for easy maintenance and extension:
+```
+project_root/
+├── src/
+│   ├── configs/
+│   │   └── config.py               # Environment variables & directories
+│   ├── ingestion/
+│   │   ├── __init__.py
+│   │   └── data_ingestor.py        # Main entry point
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── file_utils.py           # File handling & decompression
+│   │   ├── ingestion_utils.py      # Process tracking & deduplication
+│   │   └── clickhouse_utils.py     # ClickHouse cleaning & batch insertion
+│
+├── logs/                           # Log files from ingestion runs
+├── data/                           # Unzipped datasets
+├── data_zipped/                    # Raw downloaded compressed files
+├── processed_log.json              # Tracks processed unzipped files
+├── processed_log_zipped.json       # Tracks processed zipped files
+└── README.md
+```
+
+---
+
+## ⚙️ Configuration
+
+Set your environment variables inside `src/configs/config.py` or a `.env` file:
+
+```python
+CLICKHOUSE_HOST = "localhost"
+CLICKHOUSE_USER = "analytics"
+CLICKHOUSE_PASSWORD = "password123"
+CLICKHOUSE_DB = "analytics_db"
+
+DATA_DIR = "data"
+DATA_DIR_ZIPPED = "data_zipped"
+LOGS_DIR = "logs"
+PROCESSED_LOG = "processed_log.json"
+PROCESSED_LOG_ZIPPED = "processed_log_zipped.json"
+```
+
+---
 
 ## 🧠 Key Components
 
 ### 1. `file_utils.py`
-Handles all I/O operations outside of the database:
-* File download from URL (`download_file`).
-* Decompression of `.gz` and `.zip` files (`decompress_file`).
-* Loading JSON/JSONL files into Pandas or Polars DataFrames.
+Handles:
+- File download from URL (`download_file`)
+- Decompression of `.gz` and `.zip` files (`decompress_file`)
+- Loading JSON/JSONL files into Pandas or Polars
 
 ### 2. `ingestion_utils.py`
-Manages the deduplication and process tracking logic:
-* File **hash computation** for unique identification.
-* Tracking processed files in simple JSON logs.
-* Filtering out already processed files based on the logs.
+Handles:
+- File hash computation for deduplication
+- Tracking processed files in JSON logs
+- Filtering out already processed files
 
 ### 3. `clickhouse_utils.py`
-Manages the final step of data preparation and loading:
-* Data cleaning and type conversion (e.g., handling nested JSON).
-* Conversion of nested data structures to flat JSON strings if necessary.
-* **Batch insertion** into ClickHouse for optimal performance.
+Handles:
+- Data cleaning and type conversion
+- Batch insertion into ClickHouse
+- Conversion of nested data structures to JSON
 
 ### 4. `data_ingestor.py`
-The main orchestrator:
-* It ties together all utilities to execute the download, unzip, process, and upload workflow.
-* Uses **CLI arguments** for flexible execution of each step.
+Orchestrates the entire ingestion flow:
+- Downloads, unzips, processes, and uploads data
+- Uses CLI arguments for flexibility
+
+---
 
 ## 🧩 Usage
 
-Run the script from the project root using the Python module execution:
+Run the script from the project root:
 
 ```bash
-# Example: Download, unzip, and process a file in one command
-python -m src.ingestion.data_ingestor --url "[https://example.com/data.json.gz](https://example.com/data.json.gz)" --unzipping --process
+python -m src.ingestion.data_ingestor --url "https://example.com/data.json.gz" --unzipping --process
+```
 
-Available OptionsArgumentDescription--urlURL of the dataset to download. Triggers the download step.--unzippingUnzips any new compressed files in the data_zipped directory.--processProcesses new unzipped files in the data directory and loads them into ClickHouse.
+### Available Options
 
-Example Workflow
-You can run each step independently, which is useful for large datasets or scheduled jobs:
+| Argument | Description |
+|----------|-------------|
+| `--url` | URL of the dataset to download |
+| `--unzipping` | Unzips any new compressed files |
+| `--process` | Processes unzipped files and loads them into ClickHouse |
 
-1. Download new compressed file(s)
-Bash
+You can combine them (as shown above) or run each step separately.
 
-python -m src.ingestion.data_ingestor --url "[https://example.com/data.gz](https://example.com/data.gz)"
-2. Unzip new compressed files
-This step checks processed_log_zipped.json to only unzip newly downloaded files.
+---
 
-Bash
+## 🗃️ Example Workflow
 
+### 1. Download new file
+```bash
+python -m src.ingestion.data_ingestor --url "https://example.com/data.gz"
+```
+
+### 2. Unzip new compressed files
+```bash
 python -m src.ingestion.data_ingestor --unzipping
-3. Process and push to ClickHouse
-This step checks processed_log.json to only process files not yet inserted into ClickHouse.
+```
 
-Bash
-
+### 3. Process and push to ClickHouse
+```bash
 python -m src.ingestion.data_ingestor --process
-🧾 Logging
-All pipeline activities are logged to logs/data_ingestion.log. This includes:
+```
 
-Download and extraction progress.
+---
 
-Files processed or skipped (due to deduplication).
+## 🧾 Logging
 
-ClickHouse insertion status and batch metrics.
+All logs are stored in `logs/data_ingestion.log` and include:
 
-🧰 Dependencies
-Install all necessary dependencies using the provided requirements.txt file:
+- Download and extraction progress
+- Files processed or skipped
+- ClickHouse insertion status
 
-Bash
+---
 
+## 🧰 Dependencies
+
+Install dependencies with:
+
+```bash
 pip install -r requirements.txt
-Example primary dependencies include:
+```
 
-pandas / polars (for data processing)
+### Example dependencies:
 
-clickhouse-driver (for database connection)
+```
+pandas
+numpy
+polars
+clickhouse-driver
+requests
+python-dotenv
+```
 
-requests (for file downloading)
-
-python-dotenv (for configuration management)
+---
